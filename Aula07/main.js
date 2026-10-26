@@ -93,7 +93,12 @@ app.post('/salvar', (req, res) => {
 app.post("/api/v1/users/login",(req,res)=>{
   console.log("vai logar")
   return userController.login(req,res);
-})  
+}) 
+
+app.post("/api/v1/users/first",(req,res)=>{
+  console.log("vai logar")
+  return userController.create(req,res);
+}) 
 
 app.use("/api/v1", verificaToken, require("./router/UserRouter.js"));
 app.use("/api/v1", verificaToken, require("./router/ClientRouter.js"));
