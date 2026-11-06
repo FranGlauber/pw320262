@@ -7,9 +7,12 @@ const port = 3000;
 const sequelize = require('./models/Bd.js').sequelize;
 const {User} = require('./models/User.js');
 
+const Venda = require('./models/Venda.js');
+
 const userController = require("./controller/UserController.js")
 const clienteController = require("./controller/ClienteController.js")
 const produtoController = require("./controller/ProdutoController.js")
+const vendaController = require("./controller/VendaController.js")
 const SECRET ="MALHADAO"
 
 app.use(express.json());
@@ -104,7 +107,7 @@ app.post("/api/v1/users/first",(req,res)=>{
 app.use("/api/v1", verificaToken, require("./router/UserRouter.js"));
 app.use("/api/v1", verificaToken, require("./router/ClientRouter.js"));
 app.use("/api/v1", verificaToken, require("./router/ProdutoRouter.js"));
-
+app.use("/api/v1", verificaToken, require("./router/VendaRouter.js"));
 
 app.listen(port, () => {
     sequelize.authenticate().then(
