@@ -24,6 +24,11 @@ const Venda = sequelize.define("Venda", {
     precoTotal: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
+    },
+    dataPedido: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
     }
 });
 

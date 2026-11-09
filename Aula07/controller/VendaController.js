@@ -93,7 +93,7 @@ exports.create = async (req, res) => {
         return res.status(400).json({ error: 'Body is required' });
     }
 
-    const { id_cliente, id_produto, qtd } = req.body;
+    const { id_cliente, id_produto, qtd, dataPedido } = req.body;
 
     let filedsNOTVALID = [];
     for (const field of ['id_cliente', 'id_produto', 'qtd']) {
@@ -104,6 +104,10 @@ exports.create = async (req, res) => {
 
     if (filedsNOTVALID.length > 0) {
         return res.status(400).json({ error: `Fields not valid: ${filedsNOTVALID.join(', ')}` });
+    }
+
+    if (!Number.isInteger(Number(qtd)) || Number(qtd) <= 0) {
+        return res.status(400).json({ error: 'A quantidade deve ser um número inteiro maior que zero' });
     }
 
     let ab = {
@@ -127,7 +131,8 @@ exports.create = async (req, res) => {
                 id_cliente,
                 id_produto,
                 qtd,
-                precoTotal
+                precoTotal,
+                dataPedido: dataPedido || new Date()
             }).then(() => {
                 return res.status(201).json(ab);
             }).catch((e) => {
@@ -149,7 +154,7 @@ exports.update = async (req, res) => {
         return res.status(400).json({ error: 'Body is required' });
     }
 
-    const { id_cliente, id_produto, qtd } = req.body;
+    const { id_cliente, id_produto, qtd, dataPedido } = req.body;
 
     let filedsNOTVALID = [];
     for (const field of ['id_cliente', 'id_produto', 'qtd']) {
@@ -160,6 +165,10 @@ exports.update = async (req, res) => {
 
     if (filedsNOTVALID.length > 0) {
         return res.status(400).json({ error: `Fields not valid: ${filedsNOTVALID.join(', ')}` });
+    }
+
+    if (!Number.isInteger(Number(qtd)) || Number(qtd) <= 0) {
+        return res.status(400).json({ error: 'A quantidade deve ser um número inteiro maior que zero' });
     }
 
     Venda.findByPk(id).then((venda) => {
@@ -181,6 +190,10 @@ exports.update = async (req, res) => {
                 venda.id_produto = id_produto;
                 venda.qtd = qtd;
                 venda.precoTotal = parseFloat(produto.precoVenda) * parseFloat(qtd);
+
+                if (dataPedido) {
+                    venda.dataPedido = dataPedido;
+                }
 
                 venda.save().then(() => {
                     return res.status(200).json({ msg: "Venda atualizada com sucesso" });
